@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="brython.js"></script>
+    <script type="text/javascript" src="brython_stdlib.js"></script>
+    <style>
+    body {
+        background-color:#000;
+        color:#fff;
+    }
+    .codearea {
+        background-color:#000;
+        color:#fff;
+        font-family:'Oxygen Mono', Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+        font-size:1.1em;
+        overflow:auto
+    }
+    .codearea:focus {
+        outline: none;
+    }
+    </style>
+</head>
+
+<body onload=brython({"debug":1}) >
+    <noscript>Please enable Javascript to view this page correctly</noscript>
+
+    <div id="code" class="codearea" contenteditable></div>
+
+    <script type="text/python3">
+        from interpreter import Interpreter
+        Interpreter("code")
+    </script>
+</body>
+</html>
