@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.12.3/brython.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.12.3/brython_stdlib.js"></script>
+	<title>Python Runner</title>
+	<style type="text/css" media="screen">
+	    #editor { 
+	        position: absolute;
+	        top: 4em;
+	        right: 0.7em;
+	        bottom: 40%;
+	        left: 0;
+	        font-size: 1em;
+	    }
+	    #output {
+	        position: absolute;
+	        top: 66.5%;
+	        right: 0;
+	        bottom: 0;
+	        left: 0;
+	        color: white;
+	        margin: 1em;
+	        font-size: 1.3em;
+	        overflow-y: auto;
+	    }
+	    button {
+	        padding: 0.5em;
+	        background-color: white;
+	        border-radius: 0.5em;
+	        color: black;
+	        font-size: 0.9em
+	    }
+	    button:hover {
+	    	cursor: pointer;
+	    	background-color: #ccc;
+	    }
+	    #clear-output {
+	        position: absolute;
+	        top: 63.5%;
+	        right: 0.7em;
+	    }
+	</style>
+</head>
+<body onload="brython()" style="background: #24292e;">
+  <noscript>Please enable Javascript to view this page correctly</noscript>
+	<div style="margin-top: 1em; display: flex; justify-content: space-between;">
+		<a href="repl.html" draggable="false"><button>REPL Mode</button></a>
+	<button id="run-python">Run Program</button>
+	</div>
+	<div id="editor"># Start Coding here
+number = int(input("Enter a number: "))
+print("Numbers from 1 to", number, ":")
+for i in range(1, number+1):
+    print(i)</div>
+	<hr style="position: absolute; top: 60%; right: 0;left: 0">
+	<h2 style="font-family: 'Segoe UI'; position: absolute; top: 61%; left: 0.7em; color: white">Output:</h2>
+	<button id="clear-output", onclick="document.getElementById('output').innerHTML = null">Clear</button>
+	<pre id="output"></pre>
+	    
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.34.1/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		const editor = ace.edit("editor");
+		editor.setTheme("ace/theme/github_dark");
+		editor.session.setMode("ace/mode/python");
+
+		document.getElementById("run-python").onclick = () => {
+			const code = editor.getValue();
+			const output = document.getElementById("output");
+			output.innerHTML = "";
+			const script = `import sys
+from browser import document
+
+class OutputWriter:
+    def __init__(self):
+        self.output = document['output']
+
+    def write(self, text):
+        self.output.textContent += text
+
+    def flush(self):
+        pass
+
+sys.stdout = OutputWriter()
+sys.stderr = OutputWriter()
+
+${code}`;
+            try {
+            	const jsCode = __BRYTHON__.python_to_js(script);
+            	eval(jsCode);
+            } catch (error) {
+            	output.textContent = "Error executing code: " + error;
+            }
+        };
+	</script>
+</body>
+</html>
